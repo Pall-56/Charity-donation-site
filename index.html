@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Share Wave – Donate Unused Items</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --accent: #10b981;
+      --bg: #0f172a;
+      --card: #0b1120;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --radius-lg: 18px;
+      --radius-full: 999px;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #1d283a 0, #020617 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 48px;
+    }
+
+    /* NAV */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 0, #60a5fa 0, #1d4ed8 40%, #0f172a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand-text-main {
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--text-muted);
+    }
+
+    .nav-pill {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 12px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+    }
+
+    /* HERO */
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.3fr);
+      gap: 32px;
+      margin-bottom: 36px;
+      align-items: center;
+    }
+
+    @media (max-width: 840px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-main-title {
+      font-size: clamp(32px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(to right, #60a5fa, #a855f7, #f97316);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 460px;
+      margin-bottom: 18px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-muted);
+    }
+
+    .tag-primary {
+      border: none;
+      background: rgba(37, 99, 235, 0.15);
+      color: #bfdbfe;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      border-radius: var(--radius-full);
+      padding: 10px 18px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #2563eb, #4f46e5);
+      color: white;
+      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.55);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.7);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+    }
+
+    .hero-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .hero-note span {
+      color: #bbf7d0;
+    }
+
+    /* HERO CARD */
+
+    .hero-card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 18px 16px;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-pill-top {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      align-self: flex-start;
+    }
+
+    .hero-pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #f97316;
+    }
+
+    .hero-card-main {
+      background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.18) 0, rgba(15, 23, 42, 1) 55%);
+      border-radius: 20px;
+      padding: 14px 14px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      display: grid;
+      gap: 10px;
+    }
+
+    .hero-card-title {
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-card-title span {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .hero-list {
+      list-style: none;
+      display: grid;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 13px;
+    }
+
+    .hero-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .hero-list-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-badge-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .hero-list-tag {
+      font-size: 11px;
+      border-radius: var(--radius-full);
+      padding: 2px 8px;
+      background: rgba(34, 197, 94, 0.12);
+      color: #bbf7d0;
+    }
+
+    .hero-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .hero-footer-row strong {
+      color: #e5e7eb;
+    }
+
+    /* MAIN SECTIONS */
+
+    .section {
+      margin-top: 28px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 20px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 18px 16px 16px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 360px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 800px) {
+      .steps-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .step-card {
+      border-radius: 16px;
+      background: #020617;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 12px 12px 10px;
+    }
+
+    .step-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .step-pill {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      background: rgba(37, 99, 235, 0.12);
+      color: #bfdbfe;
+    }
+
+    .step-num {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .step-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* DONATE / REQUEST */
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 840px) {
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      border-radius: 16px;
+      background: #020617;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 12px 12px 10px;
+    }
+
+    .card-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .card-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-size: 12px;
+      display: block;
+      margin-bottom: 4px;
+      color: #e5e7eb;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 7px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #6b7280;
+    }
+
+    .small-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 8px;
+    }
+
+    .helper {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .pill-row span {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: var(--text-muted);
+    }
+
+    .pill-row span.highlight {
+      border-color: rgba(34, 197, 94, 0.9);
+      color: #bbf7d0;
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer a {
+      color: #93c5fd;
+    }
+
+    /* UTIL */
+
+    .badge-green {
+      color: #bbf7d0;
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      background: rgba(22, 163, 74, 0.14);
+      border: 1px solid rgba(34, 197, 94, 0.8);
+    }
+
+    .text-accent {
+      color: #fde68a;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(31, 41, 55, 0.95), transparent);
+      margin: 10px 0 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- NAV -->
+    <header class="nav">
+      <div class="brand">
+        <div class="brand-icon">SW</div>
+        <div>
+          <div class="brand-text-main">Share Wave</div>
+          <div class="brand-text-sub">Donate · Reuse · Uplift</div>
+        </div>
+      </div>
+      <div class="nav-pill">
+        <span class="nav-dot"></span>
+        Live matching between donors & receivers
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div>
+        <h1 class="hero-main-title">
+          Turn unused items into
+          <span class="hero-highlight">new chances</span>
+          for someone in your city.
+        </h1>
+        <p class="hero-subtitle">
+          Share Wave connects people who have things they no longer need
+          with neighbours who truly do. In a few clicks, you can list items,
+          request essentials, and keep good things out of landfills.
+        </p>
+
+        <div class="hero-tags">
+          <span class="tag-primary">Free to use</span>
+          <span class="tag">Local communities</span>
+          <span class="tag">Clothes · Books · Furniture · Devices</span>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-scroll-target="#donate">
+            I want to donate items →
+          </button>
+          <button class="btn btn-secondary" data-scroll-target="#request">
+            I need items
+          </button>
+        </div>
+
+        <p class="hero-note">
+          ★ Every donation creates a small <span>wave of impact</span> – we match
+          you with verified local partners and individuals.
+        </p>
+      </div>
+
+      <!-- Hero visual card -->
+      <aside class="hero-card" aria-label="Share Wave summary panel">
+        <div class="hero-pill-top">
+          <span class="hero-pill-dot"></span>
+          Real examples from Share Wave this week
+        </div>
+
+        <div class="hero-card-main">
+          <div class="hero-card-title">
+            <div>
+              Recent donation matches
+            </div>
+            <span>Live snapshot</span>
+          </div>
+          <ul class="hero-list">
+            <li>
+              <div class="hero-list-label">
+                <div class="hero-badge-icon">👟</div>
+                <div>
+                  <div>Kids’ winter shoes</div>
+                  <small class="hero-note">Donor · Tallaght → Family · City centre</small>
+                </div>
+              </div>
+              <span class="hero-list-tag">Delivered</span>
+            </li>
+            <li>
+              <div class="hero-list-label">
+                <div class="hero-badge-icon">📚</div>
+                <div>
+                  <div>Exam prep books</div>
+                  <small class="hero-note">Student · IFSC → Youth centre · North side</small>
+                </div>
+              </div>
+              <span class="hero-list-tag">Matched</span>
+            </li>
+            <li>
+              <div class="hero-list-label">
+                <div class="hero-badge-icon">🧥</div>
+                <div>
+                  <div>Winter jackets bundle</div>
+                  <small class="hero-note">Office drive → Local shelter</small>
+                </div>
+              </div>
+              <span class="hero-list-tag">In transit</span>
+            </li>
+          </ul>
+
+          <div class="divider"></div>
+
+          <div class="hero-footer-row">
+            <div>
+              <strong>2,340+</strong> items reused
+            </div>
+            <div class="badge-green">
+              100% donation-based · No selling
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="section-header">
+        <div class="section-title">How Share Wave works</div>
+        <p class="section-sub">
+          Share Wave makes it easy for donors and receivers to find each other.
+          We focus on simplicity, safety, and clear communication at every step.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-pill">Step 1</span>
+            <span class="step-num">You → Share Wave</span>
+          </div>
+          <div class="step-title">Tell us what you have or what you need</div>
+          <p class="step-text">
+            Fill in a short form with basic details about items you want to donate
+            or essentials you are looking for. You stay in control of what and how
+            you share.
+          </p>
+        </article>
+
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-pill">Step 2</span>
+            <span class="step-num">Share Wave → Community</span>
+          </div>
+          <div class="step-title">We match you with a local receiver or donor</div>
+          <p class="step-text">
+            Our team and partners review submissions and connect people within the
+            same city or neighbourhood to reduce travel time and emissions.
+          </p>
+        </article>
+
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-pill">Step 3</span>
+            <span class="step-num">Together</span>
+          </div>
+          <div class="step-title">Arrange a safe handover</div>
+          <p class="step-text">
+            You agree a safe collection time and place with the matched person or
+            partner organisation. Whenever possible, we work with trusted hubs
+            such as community centres or shelters.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- DONATE + REQUEST -->
+    <section class="section" id="donate">
+      <div class="section-header">
+        <div class="section-title">Donate or request items</div>
+        <p class="section-sub">
+          Share a few details so we can connect you with the right person or
+          organisation. These forms are a simple starting point – our team follows
+          up by email.
+        </p>
+      </div>
+
+      <div class="two-col">
+        <!-- Donate form -->
+        <div class="card">
+          <div class="card-title">
+            <span>Donate items</span>
+            <span class="text-accent">Give a second life to your things</span>
+          </div>
+          <p class="card-text">
+            Clothes, books, furniture, devices, household items – if it is clean,
+            working, and useful, someone can benefit from it.
+          </p>
+
+          <form id="donate-form">
+            <label for="donor-name">Your name</label>
+            <input id="donor-name" type="text" placeholder="e.g. Aisling Murphy" required />
+
+            <div class="small-row">
+              <div>
+                <label for="donor-email">Email</label>
+                <input id="donor-email" type="email" placeholder="you@example.com" required />
+              </div>
+              <div>
+                <label for="donor-city">City / area</label>
+                <input id="donor-city" type="text" placeholder="e.g. Dublin 1" required />
+              </div>
+            </div>
+
+            <label for="donor-items">What would you like to donate?</label>
+            <textarea id="donor-items" placeholder="Short description of items, sizes, quantity…" required></textarea>
+
+            <p class="helper">
+              Preferred partners:
+            </p>
+            <div class="pill-row">
+              <span class="highlight">Local shelters</span>
+              <span>Community centres</span>
+              <span>Student support</span>
+              <span>Refugee support</span>
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+              Submit donation interest
+            </button>
+          </form>
+        </div>
+
+        <!-- Request form -->
+        <div class="card" id="request">
+          <div class="card-title">
+            <span>Request essentials</span>
+            <span class="badge-green">No judgement · No fees</span>
+          </div>
+          <p class="card-text">
+            If you are going through a difficult time, we work with partners to
+            connect you with donated items whenever possible.
+          </p>
+
+          <form id="request-form">
+            <label for="receiver-name">Your name</label>
+            <input id="receiver-name" type="text" placeholder="You can also use a first name only" required />
+
+            <label for="receiver-email">Email</label>
+            <input id="receiver-email" type="email" placeholder="Contact email" required />
+
+            <label for="receiver-city">City / area</label>
+            <input id="receiver-city" type="text" placeholder="e.g. Tallaght, Cork city…" required />
+
+            <label for="receiver-needs">What do you need?</label>
+            <textarea id="receiver-needs" placeholder="Describe what would be helpful right now…" required></textarea>
+
+            <p class="helper">
+              We prioritise requests related to <span class="text-accent">warmth, study, and basic household needs.</span>
+            </p>
+
+            <button class="btn btn-secondary" type="submit">
+              Send request
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div>
+        © <span id="year"></span> Share Wave · Built as a learning project to explore
+        cloud-hosted charity services.
+      </div>
+      <div>
+        Questions? Contact: <a href="mailto:hello@sharewave.example">hello@sharewave.example</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Smooth scroll for buttons
+    document.querySelectorAll("[data-scroll-target]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const target = document.querySelector(btn.getAttribute("data-scroll-target"));
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    // Simple demo forms (no backend, just a message)
+    function attachFakeSubmit(formId, type) {
+      const form = document.getElementById(formId);
+      if (!form) return;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        alert(
+          "Thank you for your " +
+            type +
+            " submission to Share Wave.\n\nThis demo site does not store data – in a real deployment your details would be securely processed by the charity."
+        );
+        form.reset();
+      });
+    }
+
+    attachFakeSubmit("donate-form", "donation");
+    attachFakeSubmit("request-form", "request");
+
+    // Year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
