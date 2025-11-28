@@ -44,6 +44,66 @@
       padding: 20px 16px 48px;
     }
 
+    /* WELCOME POPUP */
+    .welcome-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(219, 234, 254, 0.96), rgba(248, 250, 252, 0.98));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .welcome-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .welcome-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 24px 20px 18px;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(148, 163, 184, 0.55);
+      border: 1px solid #e5e7eb;
+    }
+
+    .welcome-logo {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 10px;
+      border-radius: 24px;
+      background: conic-gradient(from 160deg, #bfdbfe, #fecaca, #fee2e2, #e0f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: 0 16px 40px rgba(148, 163, 184, 0.65);
+    }
+
+    .welcome-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .welcome-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .welcome-note {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 8px;
+    }
+
     /* NAV */
     .nav {
       display: flex;
@@ -59,17 +119,18 @@
     }
 
     .brand-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 14px;
-      background: radial-gradient(circle at 30% 0, #60a5fa 0, #2563eb 40%, #1d4ed8 100%);
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #f9a8d4 0, #bfdbfe 40%, #93c5fd 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       font-size: 18px;
-      color: white;
-      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.3);
+      color: #1f2937;
+      box-shadow: 0 10px 24px rgba(148, 163, 184, 0.75);
+      font-family: "Trebuchet MS", "Comic Sans MS", system-ui, sans-serif;
     }
 
     .brand-text-main {
@@ -563,8 +624,6 @@
       color: #ea580c;
     }
 
-    /* UTIL */
-
     .divider {
       height: 1px;
       background: linear-gradient(to right, transparent, rgba(209, 213, 219, 0.9), transparent);
@@ -573,11 +632,28 @@
   </style>
 </head>
 <body>
+  <!-- Welcome popup -->
+  <div id="welcome-overlay" class="welcome-overlay">
+    <div class="welcome-card">
+      <div class="welcome-logo">🌊</div>
+      <div class="welcome-title">Welcome to Share Wave</div>
+      <p class="welcome-sub">
+        A bright, gentle space where unused items can quietly find a new home.
+      </p>
+      <button class="btn btn-primary" id="enter-site" data-click-sound>
+        Enter site
+      </button>
+      <p class="welcome-note">
+        A short, soft melody will play once to welcome you in.
+      </p>
+    </div>
+  </div>
+
   <div class="page">
     <!-- NAV -->
     <header class="nav">
       <div class="brand">
-        <div class="brand-icon" data-click-sound>SW</div>
+        <div class="brand-icon" data-click-sound>♡</div>
         <div>
           <div class="brand-text-main">Share Wave</div>
           <div class="brand-text-sub">Donate · Reuse · Uplift</div>
@@ -913,7 +989,7 @@
   </div>
 
   <script>
-    // ---------- AUDIO SETUP (welcome + click/tab sounds) ----------
+    // ---------- AUDIO SETUP (welcome music + click/tab sounds) ----------
     let audioContext = null;
 
     function getAudioContext() {
@@ -927,30 +1003,35 @@
       return audioContext;
     }
 
-    // Calm welcoming sound for ~3 seconds on load
-    function playWelcomeSound() {
+    // Subtle welcome music: soft little melody for a few seconds
+    function playWelcomeMusic() {
       const ctx = getAudioContext();
       if (!ctx) return;
 
-      const startTime = ctx.currentTime + 0.1;
-      const duration = 3;
+      const now = ctx.currentTime;
 
-      // Create a soft chord with three sine waves
-      const freqs = [392, 494, 587]; // G, B, D (gentle major chord)
-      freqs.forEach((freq, index) => {
+      // A gentle sequence of notes
+      const sequence = [
+        { freq: 392.00, time: 0.0 },  // G4
+        { freq: 440.00, time: 0.7 },  // A4
+        { freq: 523.25, time: 1.4 },  // C5
+        { freq: 587.33, time: 2.1 },  // D5
+        { freq: 523.25, time: 2.8 }   // C5
+      ];
+
+      sequence.forEach(note => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
 
         osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, startTime);
+        osc.frequency.setValueAtTime(note.freq, now + note.time);
 
-        const baseGain = 0.06;
-        gain.gain.setValueAtTime(baseGain, startTime + index * 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+        gain.gain.setValueAtTime(0.05, now + note.time);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + note.time + 0.8);
 
         osc.connect(gain).connect(ctx.destination);
-        osc.start(startTime);
-        osc.stop(startTime + duration + 0.2);
+        osc.start(now + note.time);
+        osc.stop(now + note.time + 1.0);
       });
     }
 
@@ -975,23 +1056,6 @@
       osc.stop(now + 0.15);
     }
 
-    // Try to play welcome sound on load (may be blocked on some browsers)
-    window.addEventListener("load", () => {
-      // small timeout so page feels loaded first
-      setTimeout(() => {
-        playWelcomeSound();
-      }, 500);
-    });
-
-    // Also resume context on first user interaction
-    ["click", "keydown", "touchstart"].forEach((evt) => {
-      window.addEventListener(evt, () => {
-        if (audioContext && audioContext.state === "suspended") {
-          audioContext.resume();
-        }
-      }, { once: true });
-    });
-
     // Attach click sound to any element with data-click-sound
     function attachClickSounds() {
       document.querySelectorAll("[data-click-sound]").forEach((el) => {
@@ -1001,18 +1065,18 @@
       });
     }
 
-    attachClickSounds();
-
     // ---------- SMOOTH SCROLL ----------
-    document.querySelectorAll("[data-scroll-target]").forEach(function (el) {
-      el.addEventListener("click", function () {
-        const selector = el.getAttribute("data-scroll-target");
-        const target = document.querySelector(selector);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+    function attachSmoothScroll() {
+      document.querySelectorAll("[data-scroll-target]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          const selector = el.getAttribute("data-scroll-target");
+          const target = document.querySelector(selector);
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
       });
-    });
+    }
 
     // ---------- FORMS (DEMO ONLY) ----------
     function attachFakeSubmit(formId, type) {
@@ -1029,11 +1093,42 @@
       });
     }
 
-    attachFakeSubmit("donate-form", "donation");
-    attachFakeSubmit("request-form", "request");
+    // ---------- WELCOME POPUP LOGIC ----------
+    function setupWelcomePopup() {
+      const overlay = document.getElementById("welcome-overlay");
+      const enterBtn = document.getElementById("enter-site");
 
-    // ---------- YEAR ----------
-    document.getElementById("year").textContent = new Date().getFullYear();
+      if (!overlay || !enterBtn) return;
+
+      enterBtn.addEventListener("click", () => {
+        // play subtle welcome music when user enters
+        playWelcomeMusic();
+        overlay.classList.add("hidden");
+      });
+    }
+
+    // ---------- INIT ----------
+    document.addEventListener("DOMContentLoaded", () => {
+      attachClickSounds();
+      attachSmoothScroll();
+      attachFakeSubmit("donate-form", "donation");
+      attachFakeSubmit("request-form", "request");
+      setupWelcomePopup();
+      document.getElementById("year").textContent = new Date().getFullYear();
+    });
+
+    // Ensure audio context can resume on first interaction if needed
+    ["click", "keydown", "touchstart"].forEach((evt) => {
+      window.addEventListener(
+        evt,
+        () => {
+          if (audioContext && audioContext.state === "suspended") {
+            audioContext.resume();
+          }
+        },
+        { once: true }
+      );
+    });
   </script>
 </body>
 </html>
