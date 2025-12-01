@@ -2,21 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Charity Connector Hub</title>
+  <title>Share Wave – Donate Unused Items</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      --bg: #f5f7fb;
-      --primary: #2563eb;
-      --primary-soft: #e0edff;
-      --accent: #22c55e;
-      --card: #ffffff;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --border-subtle: #e5e7eb;
-      --radius-lg: 18px;
+      /* Luxury violet theme */
+      --bg-gradient: radial-gradient(circle at top left, #3b0764 0, #020617 55%, #000000 100%);
+      --surface: rgba(15, 23, 42, 0.85);
+      --surface-soft: rgba(24, 24, 37, 0.9);
+      --surface-lighter: rgba(39, 39, 57, 0.98);
+      --border-subtle: rgba(148, 163, 184, 0.35);
+
+      --primary: #a855f7;     /* violet */
+      --primary-soft: rgba(168, 85, 247, 0.16);
+      --accent: #e879f9;      /* pinkish highlight */
+
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+
+      --radius-lg: 20px;
       --radius-full: 999px;
-      --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.08);
+      --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.75);
     }
 
     * {
@@ -27,38 +33,92 @@
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #e0f2fe 0, #f5f7fb 40%, #fefce8 100%);
-      color: var(--text-main);
+      background: var(--bg-gradient);
       min-height: 100vh;
+      color: var(--text-main);
       line-height: 1.5;
     }
 
     a {
-      text-decoration: none;
       color: inherit;
+      text-decoration: none;
     }
 
     .page {
       max-width: 1120px;
       margin: 0 auto;
-      padding: 20px 16px 48px;
+      padding: 22px 16px 52px;
     }
 
-    /* HEADER / HERO */
+    /* WELCOME POPUP -------------------------------------------------------- */
 
-    header {
+    .welcome-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(76, 29, 149, 0.95), rgba(8, 8, 16, 0.97));
       display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-bottom: 26px;
-    }
-
-    .top-row {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      backdrop-filter: blur(18px);
+    }
+
+    .welcome-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .welcome-card {
+      background: radial-gradient(circle at top left, #4c1d95, #020617);
+      border-radius: 26px;
+      padding: 26px 22px 20px;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(216, 180, 254, 0.6);
+    }
+
+    .welcome-logo {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 12px;
+      border-radius: 26px;
+      background: conic-gradient(from 200deg, #22d3ee, #a855f7, #e879f9, #22d3ee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      box-shadow: 0 20px 60px rgba(56, 189, 248, 0.75);
+    }
+
+    .welcome-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .welcome-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .welcome-note {
+      font-size: 11px;
+      color: #a1a1aa;
+      margin-top: 8px;
+    }
+
+    /* HEADER / NAV --------------------------------------------------------- */
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 26px;
     }
 
     .brand {
@@ -67,60 +127,107 @@
       gap: 10px;
     }
 
-    .brand-logo {
+    .brand-icon {
       width: 40px;
       height: 40px;
-      border-radius: 16px;
-      background: conic-gradient(from 160deg, #bfdbfe, #fecaca, #fee2e2, #e0f2fe);
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 0, #e879f9 0, #4c1d95 40%, #020617 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 14px 32px rgba(148, 163, 184, 0.8);
-      font-size: 22px;
+      color: #f9fafb;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      font-family: "Trebuchet MS", "Comic Sans MS", system-ui, sans-serif;
+      font-size: 20px;
     }
 
-    .brand-title {
+    .brand-text-main {
       font-weight: 700;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      font-size: 16px;
+      font-size: 14px;
     }
 
-    .brand-sub {
+    .brand-text-sub {
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: .12em;
+      letter-spacing: .18em;
       color: var(--text-muted);
     }
 
-    .tag-pill {
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .nav-link {
+      padding: 6px 11px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease, transform .08s;
+      background: transparent;
+    }
+
+    .nav-link:hover {
+      background: rgba(148, 163, 184, 0.12);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+    }
+
+    .nav-pill {
       padding: 6px 14px;
       border-radius: var(--radius-full);
-      border: 1px solid rgba(148, 163, 184, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.45);
       font-size: 12px;
       color: var(--text-muted);
-      background: rgba(255,255,255,0.9);
+      background: rgba(15, 23, 42, 0.85);
       display: inline-flex;
-      gap: 6px;
       align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(8px);
     }
 
-    .tag-pill-dot {
+    .nav-dot {
       width: 8px;
       height: 8px;
       border-radius: 999px;
       background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.28);
     }
 
-    .hero-main {
-      font-size: clamp(28px, 3.5vw, 36px);
+    /* HERO ------------------------------------------------------------------ */
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3.1fr) minmax(0, 2.4fr);
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 36px;
+    }
+
+    @media (max-width: 840px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-main-title {
+      font-size: clamp(30px, 4vw, 40px);
       font-weight: 700;
       letter-spacing: -0.03em;
+      margin-bottom: 12px;
     }
 
     .hero-highlight {
-      background: linear-gradient(to right, #2563eb, #22c55e);
+      background: linear-gradient(to right, #a855f7, #22d3ee, #e879f9);
       -webkit-background-clip: text;
       color: transparent;
     }
@@ -128,502 +235,906 @@
     .hero-subtitle {
       font-size: 14px;
       color: var(--text-muted);
-      max-width: 640px;
+      max-width: 460px;
+      margin-bottom: 18px;
     }
 
-    /* FILTER BAR */
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
 
-    .filter-bar {
-      margin-top: 18px;
-      background: rgba(255,255,255,0.95);
-      border-radius: 16px;
-      padding: 10px 12px;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 10px 26px rgba(148, 163, 184, 0.3);
+    .tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(6px);
+    }
+
+    .tag-primary {
+      border: none;
+      background: rgba(168, 85, 247, 0.16);
+      color: #e9d5ff;
+    }
+
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      align-items: center;
+      margin-bottom: 12px;
     }
 
-    .filter-group {
-      display: flex;
+    .btn {
+      border-radius: var(--radius-full);
+      padding: 10px 18px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
+      white-space: nowrap;
+      transition: transform .13s ease, box-shadow .13s ease, background .13s ease, color .13s ease;
     }
 
-    .filter-label {
+    .btn-primary {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: #f9fafb;
+      box-shadow: 0 16px 40px rgba(168, 85, 247, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 55px rgba(236, 72, 153, 0.7);
+    }
+
+    .btn-secondary {
+      background: rgba(15, 23, 42, 0.92);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(39, 39, 57, 0.95);
+      color: #e5e7eb;
+    }
+
+    .hero-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .hero-note span {
+      color: #a5b4fc;
+      font-weight: 500;
+    }
+
+    /* PRODUCT CARDS --------------------------------------------------------- */
+
+    .hero-products {
+      background: var(--surface);
+      border-radius: 24px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 16px 14px;
+      display: grid;
+      gap: 10px;
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 12px;
       color: var(--text-muted);
     }
 
-    .search-input {
-      padding: 7px 10px;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border-subtle);
-      background: #f9fafb;
-      font-size: 13px;
-      min-width: 200px;
-    }
-
-    .filter-select {
-      padding: 7px 10px;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border-subtle);
-      background: #f9fafb;
+    .hero-products-header span:first-child {
+      font-weight: 600;
+      color: #e5e7eb;
       font-size: 13px;
     }
 
-    .btn-reset {
-      border-radius: var(--radius-full);
-      padding: 7px 14px;
-      font-size: 12px;
-      border: none;
-      cursor: pointer;
-      background: var(--primary-soft);
-      color: #1d4ed8;
-    }
-
-    /* GRID */
-
-    .grid {
-      margin-top: 22px;
+    .product-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      gap: 8px;
+      margin-top: 8px;
     }
 
-    @media (max-width: 900px) {
-      .grid {
+    @media (max-width: 520px) {
+      .product-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 640px) {
-      .grid {
+    .product-card {
+      background: radial-gradient(circle at top left, #4c1d95 0, #020617 70%);
+      border-radius: 16px;
+      padding: 8px 8px 6px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      display: grid;
+      gap: 3px;
+    }
+
+    .product-image {
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.95);
+      padding: 6px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .product-name {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .product-tag {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* GENERIC SECTIONS ------------------------------------------------------ */
+
+    .section {
+      margin-top: 28px;
+      background: var(--surface-soft);
+      border-radius: 22px;
+      border: 1px solid var(--border-subtle);
+      padding: 18px 16px 16px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(14px);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 380px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 800px) {
+      .steps-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .step-card {
+      border-radius: 16px;
+      background: var(--surface-lighter);
+      border: 1px solid var(--border-subtle);
+      padding: 12px 12px 10px;
+    }
+
+    .step-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .step-pill {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: var(--radius-full);
+      background: rgba(168, 85, 247, 0.16);
+      color: #e9d5ff;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .step-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* DONATE / REQUEST ------------------------------------------------------ */
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 840px) {
+      .two-col {
         grid-template-columns: minmax(0, 1fr);
       }
     }
 
     .card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 10px 26px rgba(148, 163, 184, 0.3);
-      padding: 12px 12px 10px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: flex-start;
-    }
-
-    .card-badge {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: var(--radius-full);
-      background: var(--primary-soft);
-      color: #1d4ed8;
-    }
-
-    .card-region {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .card-name {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .card-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-      min-height: 48px;
-    }
-
-    .card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-size: 11px;
-    }
-
-    .card-tag {
-      padding: 3px 8px;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border-subtle);
-      background: #f9fafb;
-      color: var(--text-muted);
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .btn-main {
-      border-radius: var(--radius-full);
-      padding: 7px 12px;
-      border: none;
-      font-size: 12px;
-      cursor: pointer;
-      background: linear-gradient(to right, #2563eb, #22c55e);
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-outline {
-      border-radius: var(--radius-full);
-      padding: 6px 10px;
-      border: 1px solid var(--border-subtle);
-      font-size: 11px;
-      background: #f9fafb;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .saved-pill {
-      font-size: 11px;
-      color: var(--accent);
-    }
-
-    /* SIDEBAR / INFO */
-
-    .info-bar {
-      margin-top: 22px;
-      background: rgba(255,255,255,0.96);
       border-radius: 18px;
-      padding: 12px 14px;
+      background: var(--surface-lighter);
       border: 1px solid var(--border-subtle);
-      font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
+      padding: 12px 12px 10px;
     }
 
-    .info-bar strong {
+    .card-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .card-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-size: 12px;
+      display: block;
+      margin-bottom: 4px;
+      color: #e5e7eb;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 7px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      background: rgba(15, 23, 42, 0.96);
+      color: #e5e7eb;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #6b7280;
+    }
+
+    .small-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 8px;
+    }
+
+    .helper {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .pill-row span {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.96);
+    }
+
+    .pill-row span.highlight {
+      border-color: rgba(74, 222, 128, 0.9);
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.22);
+    }
+
+    /* STORIES --------------------------------------------------------------- */
+
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .stories-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stories-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .story-card {
+      border-radius: 16px;
+      background: var(--surface-lighter);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 11px 9px;
+      font-size: 12px;
+    }
+
+    .story-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: #a5b4fc;
+      margin-bottom: 4px;
+    }
+
+    .story-main {
+      margin-bottom: 4px;
       color: var(--text-main);
     }
 
-    .info-link {
-      color: #2563eb;
-      text-decoration: underline;
-      cursor: pointer;
+    .story-from {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* FOOTER ---------------------------------------------------------------- */
+
+    footer {
+      margin-top: 22px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer a {
+      color: #a5b4fc;
+    }
+
+    .badge-green {
+      color: #bbf7d0;
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      background: rgba(21, 128, 61, 0.32);
+      border: 1px solid rgba(34, 197, 94, 0.75);
+    }
+
+    .text-accent {
+      color: #fb7185;
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Welcome popup -->
+  <div id="welcome-overlay" class="welcome-overlay">
+    <div class="welcome-card">
+      <div class="welcome-logo">🌊</div>
+      <div class="welcome-title">Welcome to Share Wave</div>
+      <p class="welcome-sub">
+        A calm violet corner of the web where unused items quietly flow towards
+        people who truly need them.
+      </p>
+      <button class="btn btn-primary" id="enter-site" data-click-sound>
+        Enter site
+      </button>
+      <p class="welcome-note">
+        A soft three-second melody will play once when you enter.
+      </p>
+    </div>
+  </div>
+
   <div class="page">
-    <!-- HEADER -->
-    <header>
-      <div class="top-row">
-        <div class="brand">
-          <div class="brand-logo">🌍</div>
-          <div>
-            <div class="brand-title">Charity Connector Hub</div>
-            <div class="brand-sub">Find · Compare · Support</div>
-          </div>
-        </div>
-        <div class="tag-pill">
-          <span class="tag-pill-dot"></span>
-          Live list of student-recommended causes
+    <!-- NAV -->
+    <header class="nav">
+      <div class="brand">
+        <div class="brand-icon" data-click-sound>♡</div>
+        <div>
+          <div class="brand-text-main">Share Wave</div>
+          <div class="brand-text-sub">Donate · Reuse · Uplift</div>
         </div>
       </div>
-
-      <div>
-        <h1 class="hero-main">
-          A single place to explore
-          <span class="hero-highlight">verified charities</span>
-          and choose a cause to support.
-        </h1>
-        <p class="hero-subtitle">
-          Use this hub to browse charities around the world, read short student-written
-          invitations, and visit the official sites to donate, volunteer, or learn more.
-        </p>
-      </div>
-
-      <!-- FILTER BAR -->
-      <div class="filter-bar">
-        <div class="filter-group">
-          <span class="filter-label">Search by name or country:</span>
-          <input
-            id="searchInput"
-            class="search-input"
-            type="text"
-            placeholder="e.g. India, education, Akshaya Patra..."
-          />
+      <div class="nav-right">
+        <nav class="nav-links">
+          <span class="nav-link" data-scroll-target="#how" data-click-sound>How it works</span>
+          <span class="nav-link" data-scroll-target="#donate" data-click-sound>Donate</span>
+          <span class="nav-link" data-scroll-target="#request" data-click-sound>Request</span>
+          <span class="nav-link" data-scroll-target="#stories" data-click-sound>Stories</span>
+          <span class="nav-link" data-scroll-target="#contact" data-click-sound>Contact</span>
+        </nav>
+        <div class="nav-pill">
+          <span class="nav-dot"></span>
+          Calm matches · No clutter
         </div>
-
-        <div class="filter-group">
-          <span class="filter-label">Focus area:</span>
-          <select id="categorySelect" class="filter-select">
-            <option value="all">All</option>
-            <option value="education">Education</option>
-            <option value="health">Health</option>
-            <option value="poverty">Poverty relief</option>
-            <option value="children">Children & youth</option>
-            <option value="environment">Environment</option>
-          </select>
-        </div>
-
-        <button class="btn-reset" id="resetFilters">Reset filters</button>
       </div>
     </header>
 
-    <!-- GRID OF CHARITIES -->
-    <main>
-      <section id="charityGrid" class="grid" aria-label="List of charities">
-        <!-- Example cards: you can change / add more -->
-        <article class="card" data-name="Akshaya Patra" data-country="India" data-category="education children poverty">
-          <div class="card-top">
-            <div>
-              <div class="card-name">The Akshaya Patra Foundation</div>
-              <div class="card-desc">
-                Akshaya Patra provides mid-day meals to school children in India,
-                reducing classroom hunger and helping families keep kids in education.
-              </div>
-            </div>
-            <div class="card-badge">Education · Meals</div>
-          </div>
-          <div class="card-tags">
-            <span class="card-tag">India</span>
-            <span class="card-tag">School meals</span>
-            <span class="card-tag">Children</span>
-          </div>
-          <div class="card-footer">
-            <button class="btn-main" data-visit="https://www.akshayapatra.org">
-              Visit website →
-            </button>
-            <button class="btn-outline save-btn">
-              ♡ Save to my causes
-            </button>
-          </div>
-        </article>
-
-        <article class="card" data-name="UNICEF" data-country="Global" data-category="children health education">
-          <div class="card-top">
-            <div>
-              <div class="card-name">UNICEF</div>
-              <div class="card-desc">
-                UNICEF works in over 190 countries to protect children’s rights,
-                providing healthcare, education, nutrition, and emergency support
-                wherever it is needed most.
-              </div>
-            </div>
-            <div class="card-badge">Children · Global</div>
-          </div>
-          <div class="card-tags">
-            <span class="card-tag">Global</span>
-            <span class="card-tag">Health</span>
-            <span class="card-tag">Education</span>
-          </div>
-          <div class="card-footer">
-            <button class="btn-main" data-visit="https://www.unicef.org">
-              Visit website →
-            </button>
-            <button class="btn-outline save-btn">
-              ♡ Save to my causes
-            </button>
-          </div>
-        </article>
-
-        <article class="card" data-name="Doctors Without Borders" data-country="Global" data-category="health poverty">
-          <div class="card-top">
-            <div>
-              <div class="card-name">Doctors Without Borders (MSF)</div>
-              <div class="card-desc">
-                Médecins Sans Frontières delivers emergency medical care in conflict
-                zones, disasters and epidemics, independent of political or religious
-                agendas.
-              </div>
-            </div>
-            <div class="card-badge">Health · Emergency</div>
-          </div>
-          <div class="card-tags">
-            <span class="card-tag">Global</span>
-            <span class="card-tag">Medical</span>
-            <span class="card-tag">Crisis response</span>
-          </div>
-          <div class="card-footer">
-            <button class="btn-main" data-visit="https://www.msf.org">
-              Visit website →
-            </button>
-            <button class="btn-outline save-btn">
-              ♡ Save to my causes
-            </button>
-          </div>
-        </article>
-
-        <article class="card" data-name="Concern Worldwide" data-country="Ireland" data-category="poverty health">
-          <div class="card-top">
-            <div>
-              <div class="card-name">Concern Worldwide</div>
-              <div class="card-desc">
-                Based in Ireland, Concern focuses on extreme poverty, providing
-                nutrition, clean water, education and livelihood support in the
-                world’s most vulnerable communities.
-              </div>
-            </div>
-            <div class="card-badge">Poverty · Ireland-based</div>
-          </div>
-          <div class="card-tags">
-            <span class="card-tag">Ireland</span>
-            <span class="card-tag">Global reach</span>
-            <span class="card-tag">Emergency aid</span>
-          </div>
-          <div class="card-footer">
-            <button class="btn-main" data-visit="https://www.concern.net">
-              Visit website →
-            </button>
-            <button class="btn-outline save-btn">
-              ♡ Save to my causes
-            </button>
-          </div>
-        </article>
-
-        <article class="card" data-name="GiveIndia" data-country="India" data-category="poverty education health">
-          <div class="card-top">
-            <div>
-              <div class="card-name">GiveIndia</div>
-              <div class="card-desc">
-                GiveIndia connects donors with vetted Indian NGOs, allowing people to
-                support education, healthcare, livelihoods and disaster relief
-                through a single platform.
-              </div>
-            </div>
-            <div class="card-badge">India · Platform</div>
-          </div>
-          <div class="card-tags">
-            <span class="card-tag">India</span>
-            <span class="card-tag">Multiple causes</span>
-          </div>
-          <div class="card-footer">
-            <button class="btn-main" data-visit="https://www.giveindia.org">
-              Visit website →
-            </button>
-            <button class="btn-outline save-btn">
-              ♡ Save to my causes
-            </button>
-          </div>
-        </article>
-
-        <article class="card" data-name="WWF" data-country="Global" data-category="environment">
-          <div class="card-top">
-            <div>
-              <div class="card-name">WWF – World Wide Fund for Nature</div>
-              <div class="card-desc">
-                WWF protects wildlife, forests and oceans while working with
-                communities and governments to tackle climate change and environmental
-                loss worldwide.
-              </div>
-            </div>
-            <div class="card-badge">Environment</div>
-          </div>
-          <div class="card-tags">
-            <span class="card-tag">Global</span>
-            <span class="card-tag">Climate</span>
-            <span class="card-tag">Habitats</span>
-          </div>
-          <div class="card-footer">
-            <button class="btn-main" data-visit="https://www.worldwildlife.org">
-              Visit website →
-            </button>
-            <button class="btn-outline save-btn">
-              ♡ Save to my causes
-            </button>
-          </div>
-        </article>
-      </section>
-    </main>
-
-    <!-- INFO BAR -->
-    <section class="info-bar">
+    <!-- HERO -->
+    <section class="hero">
       <div>
-        <strong>Tip:</strong> This hub can be linked to a shared spreadsheet (like
-        the one used in class) so each tile corresponds to a student-added cause.
+        <h1 class="hero-main-title">
+          A modest way to make a
+          <span class="hero-highlight">bright change</span>
+          with things you no longer need.
+        </h1>
+        <p class="hero-subtitle">
+          Share Wave gently connects people who have spare items with neighbours
+          who truly need them. A small act of giving can quietly change
+          someone’s week.
+        </p>
+
+        <div class="hero-tags">
+          <span class="tag-primary">Community powered</span>
+          <span class="tag">Soft on the planet</span>
+          <span class="tag">Warm clothes · Books · Home items</span>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-scroll-target="#donate" data-click-sound>
+            Start a donation →
+          </button>
+          <button class="btn btn-secondary" data-scroll-target="#request" data-click-sound>
+            I need help with items
+          </button>
+        </div>
+
+        <p class="hero-note">
+          ★ Just three simple steps – <span>no selling, no judgement, only sharing.</span>
+        </p>
       </div>
-      <div>
-        When you choose a charity, always give through the official site shown
-        in the <span class="info-link">Visit website</span> button.
+
+      <!-- Product-style cards -->
+      <aside class="hero-products" aria-label="Examples of items on Share Wave">
+        <div class="hero-products-header">
+          <span>Recently shared on Share Wave</span>
+          <span class="badge-green">Real everyday items</span>
+        </div>
+        <div class="product-grid">
+          <div class="product-card">
+            <div class="product-image">🧥</div>
+            <div class="product-name">Warm jackets</div>
+            <div class="product-tag">Sizes S–XL · City centre</div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">📚</div>
+            <div class="product-name">Study books</div>
+            <div class="product-tag">College & exam prep</div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">🧸</div>
+            <div class="product-name">Toys & games</div>
+            <div class="product-tag">Clean · gently used</div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">🍽️</div>
+            <div class="product-name">Kitchen sets</div>
+            <div class="product-tag">Plates · pans · mugs</div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">💻</div>
+            <div class="product-name">Old devices</div>
+            <div class="product-tag">Helping students connect</div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">🧺</div>
+            <div class="product-name">Home bundles</div>
+            <div class="product-tag">Linens & basics</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="section-header">
+        <div class="section-title">How Share Wave works</div>
+        <p class="section-sub">
+          A calm, three-step flow that makes it simple to send items on a new
+          journey or to ask for support when you need it.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-pill">Step 1</span>
+            <span>You → Share Wave</span>
+          </div>
+          <div class="step-title">Share your details</div>
+          <p class="step-text">
+            Tell us a little about yourself and what you would like to donate or
+            request. You can keep things simple and only share what feels
+            comfortable.
+          </p>
+        </article>
+
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-pill">Step 2</span>
+            <span>Share Wave → Community</span>
+          </div>
+          <div class="step-title">We match quietly in the background</div>
+          <p class="step-text">
+            Our team looks for the best local match, often through community
+            partners such as shelters, centres, and student supports.
+          </p>
+        </article>
+
+        <article class="step-card">
+          <div class="step-top">
+            <span class="step-pill">Step 3</span>
+            <span>Together</span>
+          </div>
+          <div class="step-title">Arrange a safe handover</div>
+          <p class="step-text">
+            We connect you with a safe collection option, so items can move on
+            to their new home with as little stress as possible for everyone.
+          </p>
+        </article>
       </div>
     </section>
+
+    <!-- DONATE + REQUEST -->
+    <section class="section" id="donate">
+      <div class="section-header">
+        <div class="section-title">Donate or request items</div>
+        <p class="section-sub">
+          These forms are a gentle starting point. Once you submit, someone from
+          Share Wave or a partner organisation will follow up by email.
+        </p>
+      </div>
+
+      <div class="two-col">
+        <!-- Donate form -->
+        <div class="card">
+          <div class="card-title">
+            <span>Donate items</span>
+            <span class="text-accent">Give a second life to your things</span>
+          </div>
+          <p class="card-text">
+            Clothes, books, small furniture, devices and more – if it is clean,
+            working and useful, it can brighten another person’s day.
+          </p>
+
+          <form id="donate-form">
+            <label for="donor-name">Your name</label>
+            <input id="donor-name" type="text" placeholder="e.g. Aisling Murphy" required />
+
+            <div class="small-row">
+              <div>
+                <label for="donor-email">Email</label>
+                <input id="donor-email" type="email" placeholder="you@example.com" required />
+              </div>
+              <div>
+                <label for="donor-city">City / area</label>
+                <input id="donor-city" type="text" placeholder="e.g. Dublin 1" required />
+              </div>
+            </div>
+
+            <label for="donor-items">What would you like to donate?</label>
+            <textarea id="donor-items" placeholder="Short description of items, sizes, quantity…" required></textarea>
+
+            <p class="helper">
+              Preferred match:
+            </p>
+            <div class="pill-row">
+              <span class="highlight" data-click-sound>Local shelters</span>
+              <span data-click-sound>Community centres</span>
+              <span data-click-sound>Student support</span>
+              <span data-click-sound>Refugee support</span>
+            </div>
+
+            <button class="btn btn-primary" type="submit" data-click-sound>
+              Submit donation interest
+            </button>
+          </form>
+        </div>
+
+        <!-- Request form -->
+        <div class="card" id="request">
+          <div class="card-title">
+            <span>Request essentials</span>
+            <span class="badge-green">No judgement · No fees</span>
+          </div>
+          <p class="card-text">
+            If you are going through a difficult time, you can let us know what
+            would genuinely help. We do our best to connect you with available
+            donations.
+          </p>
+
+          <form id="request-form">
+            <label for="receiver-name">Your name</label>
+            <input id="receiver-name" type="text" placeholder="You can also use a first name only" required />
+
+            <label for="receiver-email">Email</label>
+            <input id="receiver-email" type="email" placeholder="Contact email" required />
+
+            <label for="receiver-city">City / area</label>
+            <input id="receiver-city" type="text" placeholder="e.g. Tallaght, Cork city…" required />
+
+            <label for="receiver-needs">What do you need?</label>
+            <textarea id="receiver-needs" placeholder="Describe what would be helpful right now…" required></textarea>
+
+            <p class="helper">
+              We quietly prioritise requests related to <span class="text-accent">warmth, study, and basic household needs.</span>
+            </p>
+
+            <button class="btn btn-secondary" type="submit" data-click-sound>
+              Send request
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORIES -->
+    <section class="section" id="stories">
+      <div class="section-header">
+        <div class="section-title">Small stories, gentle impact</div>
+        <p class="section-sub">
+          Behind every donated jacket, book or lamp there is a quiet story of
+          someone choosing to care. Here are a few examples.
+        </p>
+      </div>
+
+      <div class="stories-grid">
+        <article class="story-card">
+          <div class="story-tag">Warmth</div>
+          <div class="story-main">
+            “Our office donated winter coats and they reached a family who had
+            just moved into emergency accommodation.”
+          </div>
+          <div class="story-from">Donor · City centre</div>
+        </article>
+
+        <article class="story-card">
+          <div class="story-tag">Study</div>
+          <div class="story-main">
+            “Second-hand exam books meant I didn’t have to choose between rent
+            and materials this semester.”
+          </div>
+          <div class="story-from">Student · North side</div>
+        </article>
+
+        <article class="story-card">
+          <div class="story-tag">Home</div>
+          <div class="story-main">
+            “A simple kitchen starter set turned our new place into a real home
+            for our kids.”
+          </div>
+          <div class="story-from">Parent · Tallaght</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT / ABOUT -->
+    <section class="section" id="contact">
+      <div class="section-header">
+        <div class="section-title">About Share Wave</div>
+        <p class="section-sub">
+          Share Wave is a small initiative exploring how cloud-hosted tools can
+          support charities that match donations with real local needs.
+        </p>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">
+            <span>Why we exist</span>
+          </div>
+          <p class="card-text">
+            Many homes are full of good items that are no longer used, while
+            other people nearby are missing basic things. Share Wave creates a
+            gentle path between the two – using simple forms and a secure
+            backend to connect donors, receivers, and partner organisations.
+          </p>
+          <p class="card-text">
+            This demo site runs entirely in the cloud, showing how modern web
+            hosting can replace the old idea of buying and maintaining physical
+            servers just to run a website.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>Contact & next steps</span>
+          </div>
+          <p class="card-text">
+            If you are a charity, school, or community group interested in
+            collaborating, we’d love to hear from you.
+          </p>
+          <p class="card-text">
+            Email: <a href="mailto:hello@sharewave.example">hello@sharewave.example</a><br />
+            Partner enquiries: <a href="mailto:partners@sharewave.example">partners@sharewave.example</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div>
+        © <span id="year"></span> Share Wave · Built as a learning project for
+        a cloud-hosted charity website.
+      </div>
+      <div>
+        Powered by modern web hosting · No physical servers needed.
+      </div>
+    </footer>
   </div>
 
   <script>
-    // Filtering logic (UX)
-    const searchInput = document.getElementById("searchInput");
-    const categorySelect = document.getElementById("categorySelect");
-    const resetBtn = document.getElementById("resetFilters");
-    const cards = Array.from(document.querySelectorAll(".card"));
+    /* AUDIO SETUP: welcome music + click/tab sounds ----------------------- */
+    let audioContext = null;
 
-    function applyFilters() {
-      const term = searchInput.value.toLowerCase().trim();
-      const category = categorySelect.value;
+    function getAudioContext() {
+      if (!audioContext) {
+        try {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+          console.warn("Web Audio not supported");
+        }
+      }
+      return audioContext;
+    }
 
-      cards.forEach(card => {
-        const name = card.dataset.name.toLowerCase();
-        const country = card.dataset.country.toLowerCase();
-        const categories = card.dataset.category.toLowerCase();
+    // Subtle welcome melody
+    function playWelcomeMusic() {
+      const ctx = getAudioContext();
+      if (!ctx) return;
 
-        let matchesText =
-          !term ||
-          name.includes(term) ||
-          country.includes(term) ||
-          categories.includes(term);
+      const now = ctx.currentTime;
+      const sequence = [
+        { freq: 392.00, time: 0.0 },  // G4
+        { freq: 493.88, time: 0.7 },  // B4
+        { freq: 587.33, time: 1.4 },  // D5
+        { freq: 659.25, time: 2.1 },  // E5
+        { freq: 587.33, time: 2.8 }   // D5
+      ];
 
-        let matchesCategory =
-          category === "all" || categories.includes(category);
+      sequence.forEach(note => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
 
-        card.style.display = matchesText && matchesCategory ? "grid" : "none";
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(note.freq, now + note.time);
+
+        gain.gain.setValueAtTime(0.05, now + note.time);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + note.time + 0.9);
+
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now + note.time);
+        osc.stop(now + note.time + 1.1);
       });
     }
 
-    searchInput.addEventListener("input", applyFilters);
-    categorySelect.addEventListener("change", applyFilters);
-    resetBtn.addEventListener("click", () => {
-      searchInput.value = "";
-      categorySelect.value = "all";
-      applyFilters();
+    // Short click sound
+    function playClickSound() {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(1100, now);
+      osc.frequency.exponentialRampToValueAtTime(440, now + 0.12);
+
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.16);
+    }
+
+    function attachClickSounds() {
+      document.querySelectorAll("[data-click-sound]").forEach((el) => {
+        el.addEventListener("click", () => {
+          playClickSound();
+        });
+      });
+    }
+
+    // Smooth scroll
+    function attachSmoothScroll() {
+      document.querySelectorAll("[data-scroll-target]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          const selector = el.getAttribute("data-scroll-target");
+          const target = document.querySelector(selector);
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+    }
+
+    // Fake submit alerts for demo
+    function attachFakeSubmit(formId, type) {
+      const form = document.getElementById(formId);
+      if (!form) return;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        alert(
+          "Thank you for your " +
+            type +
+            " submission to Share Wave.\n\nThis demo site does not store data – in a real deployment your details would be securely processed by the charity."
+        );
+        form.reset();
+      });
+    }
+
+    // Welcome popup
+    function setupWelcomePopup() {
+      const overlay = document.getElementById("welcome-overlay");
+      const enterBtn = document.getElementById("enter-site");
+
+      if (!overlay || !enterBtn) return;
+
+      enterBtn.addEventListener("click", () => {
+        playWelcomeMusic();
+        overlay.classList.add("hidden");
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      attachClickSounds();
+      attachSmoothScroll();
+      attachFakeSubmit("donate-form", "donation");
+      attachFakeSubmit("request-form", "request");
+      setupWelcomePopup();
+      document.getElementById("year").textContent = new Date().getFullYear();
     });
 
-    // Visit website buttons
-    document.querySelectorAll("[data-visit]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const url = btn.getAttribute("data-visit");
-        window.open(url, "_blank");
-      });
-    });
-
-    // Simple "saved" state per session (localStorage)
-    document.querySelectorAll(".save-btn").forEach((btn, index) => {
-      const key = "cch-saved-" + index;
-      const updateLabel = () => {
-        const saved = localStorage.getItem(key) === "true";
-        btn.textContent = saved ? "✓ Saved to my causes" : "♡ Save to my causes";
-        btn.classList.toggle("saved", saved);
-      };
-      updateLabel();
-
-      btn.addEventListener("click", () => {
-        const current = localStorage.getItem(key) === "true";
-        localStorage.setItem(key, (!current).toString());
-        updateLabel();
-      });
+    // Ensure audio context can resume on first interaction if needed
+    ["click", "keydown", "touchstart"].forEach((evt) => {
+      window.addEventListener(
+        evt,
+        () => {
+          if (audioContext && audioContext.state === "suspended") {
+            audioContext.resume();
+          }
+        },
+        { once: true }
+      );
     });
   </script>
 </body>
